@@ -14,7 +14,11 @@ module TaskPegion
     private
 
     def config_file
-      YAML.load_file('config.yml')
+      if File.exist?('config.yml')
+        YAML.load_file('config.yml')
+      else
+        { 'task_types' => %w[Main Sub Other] }
+      end
     end
   end
 end
