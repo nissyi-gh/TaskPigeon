@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class TaskPegion::Config
+  require 'yaml'
+
   attr_reader :task_types
 
   def initialize
