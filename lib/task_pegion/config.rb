@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class TaskPegion
+module TaskPegion
   # Define the configuration class
   class Config
     require 'yaml'
