@@ -1,17 +1,15 @@
 # frozen_string_literal: true
 
-class TimePegion
-  class Config
-    attr_reader :task_types
+class TaskPegion::Config
+  attr_reader :task_types
 
-    def initialize
-      @task_types = config_file['task_types']
-    end
+  def initialize
+    @task_types = config_file['task_types']
+  end
 
-    private
+  private
 
-    def config_file
-      YAML.load_file('config.yml')
-    end
+  def config_file
+    YAML.load_file('config.yml')
   end
 end
