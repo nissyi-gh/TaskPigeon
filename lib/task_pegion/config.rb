@@ -5,9 +5,10 @@ module TaskPegion
   class Config
     require 'yaml'
 
-    attr_reader :task_types, :destinations
+    attr_reader :user_name, :task_types, :destinations
 
     def initialize
+      @user_name = config_file['user_name']
       @task_types = config_file['task_types']
       @destinations = config_file['destinations']
     end
