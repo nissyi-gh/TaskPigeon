@@ -48,9 +48,10 @@ module TaskPegion
       record = Record.new(task_type: task_type, task_name: task_name)
       record.save
 
-      Config.new.destinations.each do |destination|
+      config = Config.new
+      config.destinations.each do |destination|
         if destination['notice_types'].include?('start')
-          Notifier.new(destination['url'], { text: "Start #{task_type}: #{task_name} at #{record.started_at}" }).notice
+          Notifier.new(destination['url'], { text: "#{config.user_name}が#{task_type}の#{task_name}を開始しました。" }).notice
         end
       end
     end
@@ -72,9 +73,10 @@ module TaskPegion
           end
         end
 
-        Config.new.destinations.each do |destination|
+        config = Config.new
+        config.destinations.each do |destination|
           if destination['notice_types'].include?('end')
-            Notifier.new(destination['url'], { text: "End #{record.task_type}: #{record.task_name} at #{record.started_at}" }).notice
+            Notifier.new(destination['url'], { text: "#{config.user_name}が#{record.task_type}の#{record.task_name}を終了しました。" }).notice
           end
         end
       end
