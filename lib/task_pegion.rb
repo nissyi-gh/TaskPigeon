@@ -18,7 +18,7 @@ module TaskPegion
     elsif options[:start]
       task_start(options[:task_type], options[:task_name])
     elsif options[:end]
-      task_end(options[:task_type], options[:task_name])
+      task_end
     else
       raise Error, 'Specify --start or --end'
     end
@@ -29,8 +29,8 @@ module TaskPegion
     opt = OptionParser.new do |opt|
       opt.on_head('-s', '--start', 'Start task') { options[:start] = true }
       opt.on_head('-e', '--end', 'End task') { options[:end] = true }
-      opt.on('-t TYPE', '--task-type TYPE', 'Task type') { |v| options[:task_type] = v }
-      opt.on('-n NAME', '--task-name NAME', 'Task name') { |v| options[:task_name] = v }
+      opt.on('-t [TYPE]', '--task-type [TYPE]', 'Task type') { |v| options[:task_type] = v }
+      opt.on('-n [NAME]', '--task-name [NAME]', 'Task name') { |v| options[:task_name] = v }
     end
 
     opt.parse!(ARGV, into: options)
@@ -52,12 +52,10 @@ module TaskPegion
     end
   end
 
-  def self.task_end(task_type, task_name)
+  def self.task_end
     record = Record.last
 
-    if record.task_type != task_type || record.task_name != task_name
-      raise Error, "Task type or task name is not matched. Task type: #{task_type}, Task name: #{task_name}"
-    elsif record.ended_at
+    if record.ended_at
       raise Error, 'Task is already ended'
     else
       record.ended_at = Time.now
@@ -73,7 +71,7 @@ module TaskPegion
 
       Config.new.destinations.each do |destination|
         if destination['notice_types'].include?('end')
-          Notifier.new(destination['url'], { text: "End #{task_type}: #{task_name} at #{record.started_at}" }).notice
+          Notifier.new(destination['url'], { text: "End #{record.task_type}: #{record.task_name} at #{record.started_at}" }).notice
         end
       end
     end
