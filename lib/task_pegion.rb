@@ -38,6 +38,10 @@ module TaskPegion
   end
 
   def self.task_start(task_type, task_name)
+    if Record.last&.ended_at.nil?
+      raise Error, 'Task is already started'
+    end
+
     record = Record.new(task_type: task_type, task_name: task_name)
     record.save
 
