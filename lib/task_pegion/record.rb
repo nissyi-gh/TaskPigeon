@@ -21,6 +21,11 @@ module TaskPegion
       end
     end
 
+    def self.last
+      row = CSV.read('records.csv').last
+      new(id: row[0], task_type: row[1], task_name: row[2], started_at: row[3], ended_at: row[4])
+    end
+
     private
 
     def new_id
