@@ -50,7 +50,7 @@ module TaskPegion
         minutes = (total % 3600) / 60
         seconds = total % 60
 
-        "#{task_type}: #{hours}時間#{minutes}分#{seconds}秒 (#{(total.to_f / summary[:total] * 100).round(2)}%)"
+        "#{task_type}: #{hours}時間#{minutes}分#{seconds}秒 (#{(total.to_f / summary[:total] * 100).round(1)}%)"
       end
     end
 
