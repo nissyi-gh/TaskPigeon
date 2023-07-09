@@ -1,0 +1,11 @@
+user_name: nissyi
+task_types:
+  - Ruby
+  - TypeScript
+  - Other
+destinations:
+  - name: Slack
+    url: notification_url
+    notice_types:
+      - start
+      - end
