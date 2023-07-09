@@ -5,10 +5,11 @@ module TaskPegion
   class Config
     require 'yaml'
 
-    attr_reader :task_types
+    attr_reader :task_types, :notification_urls
 
     def initialize
       @task_types = config_file['task_types']
+      @notification_urls = config_file['notification_urls']
     end
 
     private
