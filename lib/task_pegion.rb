@@ -79,6 +79,9 @@ module TaskPegion
             text = <<~TEXT
               #{config.user_name}が#{record.task_type}の#{record.task_name}を終了しました。
               経過時間は#{record.elapsed_time_formatted}です。
+
+              サマリ
+              #{Record.summary.drop(1).join("\n")}
             TEXT
             Notifier.new(destination['url'], { text: text }).notice
           end
