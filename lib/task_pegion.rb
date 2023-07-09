@@ -62,7 +62,7 @@ module TaskPegion
       if record.ended_at
         raise Error, 'Task is already ended'
       else
-        record.ended_at = Time.now
+        record.ended_at = Time.now.to_s
 
         csv_data = CSV.read('records.csv')
         csv_data[-1][4] = record.ended_at
@@ -76,7 +76,14 @@ module TaskPegion
         config = Config.new
         config.destinations.each do |destination|
           if destination['notice_types'].include?('end')
-            Notifier.new(destination['url'], { text: "#{config.user_name}が#{record.task_type}の#{record.task_name}を終了しました。" }).notice
+            text = <<~TEXT
+              #{config.user_name}が#{record.task_type}の#{record.task_name}を終了しました。
+              経過時間は#{record.elapsed_time_formatted}です。
+
+              サマリ
+              #{Record.summary.drop(1).join("\n")}
+            TEXT
+            Notifier.new(destination['url'], { text: text }).notice
           end
         end
       end
@@ -84,4 +91,4 @@ module TaskPegion
   end
 end
 
-TaskPegion.main
+TaskPegion.main if $0 == __FILE__

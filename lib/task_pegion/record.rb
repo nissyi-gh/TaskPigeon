@@ -26,6 +26,52 @@ module TaskPegion
       new(id: row[0], task_type: row[1], task_name: row[2], started_at: row[3], ended_at: row[4])
     end
 
+    def self.summary
+      beginning_of_today = Time.new(Time.new.strftime('%Y-%m-%d'))
+      end_of_today = Time.new(Time.new.strftime('%Y-%m-%d 23:59:59'))
+      today_records = []
+
+      CSV.foreach('records.csv', headers: true).map do |row|
+        if Time.new(row[3]) >= beginning_of_today && Time.new(row[3]) <= end_of_today
+          today_records << new(id: row[0], task_type: row[1], task_name: row[2], started_at: row[3], ended_at: row[4])
+        end
+      end
+
+      summary = { total: 0 }
+      today_records.each do |record|
+        summary[record.task_type] = 0 if summary[record.task_type].nil?
+
+        summary[record.task_type] += record.elapsed_time[:total]
+        summary[:total] += record.elapsed_time[:total]
+      end
+
+      summary.map do |task_type, total|
+        hours = total / 3600
+        minutes = (total % 3600) / 60
+        seconds = total % 60
+
+        "#{task_type}: #{hours}時間#{minutes}分#{seconds}秒 (#{(total.to_f / summary[:total] * 100).round(1)}%)"
+      end
+    end
+
+    def elapsed_time_formatted
+      "#{elapsed_time[:hours]}時間#{elapsed_time[:minutes]}分#{elapsed_time[:seconds]}秒"
+    end
+
+    def elapsed_time
+      elapse_seconds = (Time.new(ended_at) - Time.new(started_at)).round
+      hours = elapse_seconds / 3600
+      minutes = (elapse_seconds % 3600) / 60
+      seconds = elapse_seconds % 60
+
+      {
+        total: elapse_seconds,
+        hours: hours,
+        minutes: minutes,
+        seconds: seconds
+      }
+    end
+
     private
 
     def new_id
