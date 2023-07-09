@@ -15,6 +15,12 @@ module TaskPegion
       @ended_at = ended_at
     end
 
+    def save
+      CSV.open('records.csv', 'a') do |csv|
+        csv << [id, task_type, task_name, started_at, ended_at]
+      end
+    end
+
     private
 
     def new_id
