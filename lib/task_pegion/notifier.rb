@@ -13,5 +13,17 @@ module TaskPegion
       @notification_url = notification_url
       @data = { 'text' => 'Hello World' }.to_json
     end
+
+    def notice
+      uri = URI.parse(notification_url)
+      request = Net::HTTP::Post.new(uri)
+      request.content_type = 'application/json'
+      request.body = data
+
+      # auto close if block given
+      Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
+        http.request(request)
+      end
+    end
   end
 end
