@@ -13,6 +13,13 @@ module TaskPegion
 
   def self.main
     options = parse_options
+    if options[:start] && options[:end]
+      raise Error, 'Cannot specify both --start and --end'
+    elsif options[:start]
+      task_start(options[:task_type], options[:task_name])
+    else
+      raise Error, 'Specify --start or --end'
+    end
   end
 
   def self.parse_options
@@ -26,6 +33,17 @@ module TaskPegion
 
     opt.parse!(ARGV, into: options)
     options
+  end
+
+  def self.task_start(task_type, task_name)
+    record = Record.new(task_type: task_type, task_name: task_name)
+    record.save
+
+    Config.new.destinations.each do |destination|
+      if destination['notice_types'].include?('start')
+        Notifier.new(destination['url'], { text: "Start #{task_type}: #{task_name} at #{record.started_at}" }).notice
+      end
+    end
   end
 end
 
