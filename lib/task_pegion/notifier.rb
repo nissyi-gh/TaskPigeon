@@ -9,9 +9,9 @@ module TaskPegion
 
     attr_reader :notification_url, :data
 
-    def initialize(notification_url)
+    def initialize(notification_url, data = { text: 'Hello World' })
       @notification_url = notification_url
-      @data = { 'text' => 'Hello World' }.to_json
+      @data = data.to_json
     end
 
     def notice
