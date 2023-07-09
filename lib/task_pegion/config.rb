@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module TaskPegion
-  # Define the configuration class
+  # Read task types and notification urls from config.yml
   class Config
     require 'yaml'
 
