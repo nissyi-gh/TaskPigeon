@@ -88,4 +88,4 @@ module TaskPegion
   end
 end
 
-TaskPegion.main
+TaskPegion.main if $0 == __FILE__
