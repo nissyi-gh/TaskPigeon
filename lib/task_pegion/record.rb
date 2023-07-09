@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class TimePegion
+module TaskPegion
   class Record
     attr_reader :id
     attr_accessor :task_type, :started_at, :ended_at
