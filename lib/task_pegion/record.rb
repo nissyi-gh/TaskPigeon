@@ -3,6 +3,7 @@
 module TaskPegion
   class Record
     require 'csv'
+    require 'time'
 
     attr_reader :id
     attr_accessor :task_type, :task_name, :started_at, :ended_at
@@ -59,7 +60,7 @@ module TaskPegion
     end
 
     def elapsed_time
-      elapse_seconds = (Time.new(ended_at) - Time.new(started_at)).round
+      elapse_seconds = (Time.parse(ended_at) - Time.parse(started_at)).round
       hours = elapse_seconds / 3600
       minutes = (elapse_seconds % 3600) / 60
       seconds = elapse_seconds % 60
