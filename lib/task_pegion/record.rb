@@ -28,12 +28,12 @@ module TaskPegion
     end
 
     def self.summary
-      beginning_of_today = Time.new(Time.new.strftime('%Y-%m-%d'))
-      end_of_today = Time.new(Time.new.strftime('%Y-%m-%d 23:59:59'))
+      beginning_of_today = Time.parse(Time.new.strftime('%Y-%m-%d'))
+      end_of_today = Time.parse(Time.new.strftime('%Y-%m-%d 23:59:59'))
       today_records = []
 
       CSV.foreach('records.csv', headers: true).map do |row|
-        if Time.new(row[3]) >= beginning_of_today && Time.new(row[3]) <= end_of_today
+        if Time.parse(row[3]) >= beginning_of_today && Time.parse(row[3]) <= end_of_today
           today_records << new(id: row[0], task_type: row[1], task_name: row[2], started_at: row[3], ended_at: row[4])
         end
       end
