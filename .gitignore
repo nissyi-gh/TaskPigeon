@@ -13,3 +13,4 @@
 config.yml
 Gemfile.lock
 records.csv
+.ruby-version
