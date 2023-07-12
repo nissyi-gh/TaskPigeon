@@ -21,9 +21,10 @@ module TaskPegion
       request.body = data
 
       # auto close if block given
-      Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |https|
+      response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |https|
         https.request(request)
       end
+      puts "#{response.body} #{response.code}"
     end
   end
 end
