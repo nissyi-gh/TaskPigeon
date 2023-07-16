@@ -9,7 +9,7 @@ module TaskPegion
 
     def initialize
       @user_name = config_file['user_name']
-      @task_types = config_file['task_types']
+      @task_types = task_converter(config_file['task_types'])
       @destinations = config_file['destinations']
     end
 
@@ -21,6 +21,19 @@ module TaskPegion
       else
         { 'task_types' => %w[Main Sub Other] }
       end
+    end
+
+    def task_converter(task_types)
+      task_types.map do |task_type|
+        if task_type['short'] && task_type['long']
+          { task_type['short'] => task_type['long'] }
+        # short only, or long only is invalid
+        elsif task_type.is_a?(Hash)
+          puts "#{task_type} is invalid. if you want to set the short and long, please set both."
+        else
+          task_type
+        end
+      end.compact
     end
   end
 end
