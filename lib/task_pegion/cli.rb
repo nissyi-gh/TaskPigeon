@@ -43,7 +43,12 @@ module TaskPegion
 
         loop do
           task_type = gets.chomp
-          return task_type if config.task_types.include?(task_type)
+          config.task_types.each do |k, v|
+            if task_type == k
+              puts "You selected '#{v}'"
+              return v
+            end
+          end
 
           puts 'Please input valid task type'
         end
@@ -51,12 +56,8 @@ module TaskPegion
 
       def show_task_types
         puts 'Your task types:'
-        config.task_types.each do |task_types|
-          if task_types.is_a?(Hash)
-            puts "#{task_types.keys[0]}: #{task_types.values[0]}"
-          else
-            puts task_types
-          end
+        config.task_types.each do |k, v|
+          puts k == v ? k : "#{k}: #{v}"
         end
         puts ''
       end
