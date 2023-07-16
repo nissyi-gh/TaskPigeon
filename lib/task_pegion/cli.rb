@@ -3,6 +3,15 @@
 module TaskPegion
   # Provide functions when run from command line
   class Cli
+    def initialize
+      if Record.last.ended_at.nil?
+        # TODO: StopPrompter.new
+      else
+        StartPrompter.new
+      end
+    end
+
+    # Interact with user to start task
     class StartPrompter
       attr_reader :config
 
@@ -15,7 +24,15 @@ module TaskPegion
       def prompter
         task_type = prompt_task_type
         task_name = prompt_task_name
-        puts "task_type: #{task_type}, task_name: #{task_name}"
+
+        record = Record.new(task_type: task_type, task_name: task_name)
+        record.save
+
+        @config.destinations.each do |destination|
+          if destination['notice_types'].include?('start')
+            Notifier.new(destination['url'], { text: "#{config.user_name}が#{task_type}の#{task_name}を開始しました。" }).notice
+          end
+        end
       end
 
       private
