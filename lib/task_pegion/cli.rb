@@ -12,7 +12,7 @@ module TaskPegion
 
       def prompter
         task_type = prompt_task_type
-        task_name = nil
+        task_name = prompt_task_name
         puts "task_type: #{task_type}, task_name: #{task_name}"
       end
 
@@ -36,6 +36,14 @@ module TaskPegion
           puts task_types.join(' ')
         end
         puts ''
+      end
+
+      def prompt_task_name
+        loop do
+          puts 'Please input task name'
+          task_name = gets.chomp
+          return task_name unless task_name.empty?
+        end
       end
     end
   end
