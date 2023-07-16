@@ -8,6 +8,8 @@ module TaskPegion
 
       def initialize
         @config = TaskPegion::Config.new
+
+        prompter
       end
 
       def prompter

@@ -22,7 +22,7 @@ module TaskPegion
       elsif options[:end]
         task_end
       else
-        Cli::StartPrompter.new.prompter
+        Cli::StartPrompter.new
       end
     end
 
