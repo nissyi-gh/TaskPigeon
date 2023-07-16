@@ -26,14 +26,14 @@ module TaskPegion
     def task_converter(task_types)
       task_types.map do |task_type|
         if task_type['short'] && task_type['long']
-          { task_type['short'] => task_type['long'] }
+          [task_type['short'], task_type['long']]
         # short only, or long only is invalid
         elsif task_type.is_a?(Hash)
           puts "#{task_type} is invalid. if you want to set the short and long, please set both."
         else
-          task_type
+          [task_type, task_type]
         end
-      end.compact
+      end.to_h
     end
   end
 end
