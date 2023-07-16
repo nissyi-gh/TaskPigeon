@@ -6,6 +6,7 @@ require_relative "task_pegion/version"
 require_relative 'task_pegion/config'
 require_relative 'task_pegion/record'
 require_relative 'task_pegion/notifier'
+require_relative 'task_pegion/cli'
 
 module TaskPegion
   class Error < StandardError; end
@@ -21,7 +22,7 @@ module TaskPegion
       elsif options[:end]
         task_end
       else
-        raise Error, 'Specify --start or --end'
+        Cli.new
       end
     end
 
