@@ -1,8 +1,12 @@
 user_name: nissyi
 task_types:
-  - Ruby
-  - TypeScript
-  - Other
+  - short: r
+    long: Ruby
+  - short: t
+    long: TypeScript
+  - short: o
+    long: Other
+  - NotHasShortHand
 destinations:
   - name: Slack
     url: notification_url
