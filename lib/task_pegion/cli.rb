@@ -5,7 +5,7 @@ module TaskPegion
   class Cli
     def initialize
       if Record.last.ended_at.nil?
-        # TODO: StopPrompter.new
+        StopPrompter.new
       else
         StartPrompter.new
       end
@@ -62,6 +62,43 @@ module TaskPegion
           puts 'Please input task name'
           task_name = gets.chomp
           return task_name unless task_name.empty?
+        end
+      end
+    end
+
+    # Interact with user to stop task
+    class StopPrompter
+      def initialize
+        @config = TaskPegion::Config.new
+        @record = Record.last
+
+        prompter
+      end
+
+      def prompter
+        puts "You are working on #{@record.task_type} #{@record.task_name}"
+        puts 'Are you sure to stop this task? (y/n)'
+        answer = gets.chomp
+
+        if answer == 'y'
+          @record.ended_at = Time.now.to_s
+
+          csv_data = CSV.read('records.csv')
+          csv_data[-1][4] = @record.ended_at
+
+          CSV.open('records.csv', 'w') do |csv|
+            csv_data.each do |row|
+              csv << row
+            end
+          end
+
+          @config.destinations.each do |destination|
+            if destination['notice_types'].include?('end')
+              Notifier.new(destination['url'], { text: "#{@config.user_name}が#{@record.task_type}の#{@record.task_name}を終了しました。" }).notice
+            end
+          end
+        else
+          puts 'Task is not stopped'
         end
       end
     end
