@@ -51,8 +51,12 @@ module TaskPegion
 
       def show_task_types
         puts 'Your task types:'
-        config.task_types.each_slice(3) do |task_types|
-          puts task_types.join(' ')
+        config.task_types.each do |task_types|
+          if task_types.is_a?(Hash)
+            puts "#{task_types.keys[0]}: #{task_types.values[0]}"
+          else
+            puts task_types
+          end
         end
         puts ''
       end
