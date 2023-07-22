@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module TaskPegion
+  require 'time'
+
   # Pomodoro Timer Class
   class Pomodoro
     # 25 minutes
@@ -8,12 +10,14 @@ module TaskPegion
     # 5 minutes
     BREAK_TIME = 300
 
-    attr_reader :config
-    attr_accessor :intterupted
+    attr_reader :config, :started_at
+    attr_accessor :intterupted, :elapsed_time
 
     def initialize
       @config = Config.new
+      @started_at = Time.now
       @interrupted = false
+      @elapsed_time = 0
 
       timer_and_notice
     end
@@ -25,6 +29,7 @@ module TaskPegion
 
       loop do
         sleep 0.5
+        @elapsed_time = Time.now - @started_at
 
         if @interrupted
           if Cli::StopPrompter.new.stop
