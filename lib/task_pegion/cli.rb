@@ -37,7 +37,7 @@ module TaskPegion
 
         if use_pomodoro
           puts 'Pomodoro timer is started. Press Ctrl+C to stop.'
-          Pomodoro.new
+          Pomodoro.new.run
         else
           puts 'Task is started. Execute task_pegion to end task.'
         end
