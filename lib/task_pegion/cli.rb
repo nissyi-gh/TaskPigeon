@@ -24,6 +24,7 @@ module TaskPegion
       def prompter
         task_type = prompt_task_type
         task_name = prompt_task_name
+        use_pomodoro = prompt_pomodoro
 
         record = Record.new(task_type: task_type, task_name: task_name)
         record.save
@@ -34,7 +35,12 @@ module TaskPegion
           end
         end
 
-        Pomodoro.new
+        if use_pomodoro
+          puts 'Pomodoro timer is started. Press Ctrl+C to stop.'
+          Pomodoro.new
+        else
+          puts 'Task is started. Execute task_pegion to end task.'
+        end
       end
 
       private
@@ -70,6 +76,13 @@ module TaskPegion
           task_name = gets.chomp
           return task_name unless task_name.empty?
         end
+      end
+
+      def prompt_pomodoro
+        puts 'Do you want to use pomodoro timer? (y/n)'
+        answer = gets.chomp
+
+        answer == 'y'
       end
     end
 
