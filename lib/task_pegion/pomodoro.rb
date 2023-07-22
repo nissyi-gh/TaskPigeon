@@ -20,6 +20,7 @@ module TaskPegion
 
     def timer_and_notice
       Signal.trap(:INT) do
+        puts
         stop = Cli::StopPrompter.new
         exit unless stop
       end
