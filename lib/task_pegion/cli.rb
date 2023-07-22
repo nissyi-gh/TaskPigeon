@@ -33,6 +33,8 @@ module TaskPegion
             Notifier.new(destination['url'], { text: "#{config.user_name}が#{task_type}の#{task_name}を開始しました。" }).notice
           end
         end
+
+        Pomodoro.new
       end
 
       private
@@ -111,6 +113,7 @@ module TaskPegion
           end
         else
           puts 'Task is not stopped'
+          return false
         end
       end
     end
