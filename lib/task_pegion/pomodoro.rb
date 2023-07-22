@@ -11,7 +11,7 @@ module TaskPegion
     BREAK_TIME = 300
 
     attr_reader :config, :started_at
-    attr_accessor :intterupted, :elapsed_time, :next_notice_time, :next_notice_type
+    attr_accessor :interrupted, :elapsed_time, :next_notice_time, :next_notice_type
 
     def initialize
       @config = Config.new
@@ -76,7 +76,7 @@ module TaskPegion
     end
 
     def work_time?
-      @elapse_time >= @next_notice_time && @next_notice_type == 'work'
+      @elapsed_time >= @next_notice_time && @next_notice_type == 'work'
     end
   end
 end
