@@ -130,7 +130,6 @@ module TaskPegion
           @stop = true
         else
           puts 'Task is not stopped'
-          return false
         end
       end
     end
