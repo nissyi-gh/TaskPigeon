@@ -88,9 +88,12 @@ module TaskPegion
 
     # Interact with user to stop task
     class StopPrompter
+      attr_reader :config, :record
+      attr_accessor :stop
       def initialize
         @config = TaskPegion::Config.new
         @record = Record.last
+        @stop = false
 
         prompter
       end
@@ -124,6 +127,7 @@ module TaskPegion
               Notifier.new(destination['url'], { text: text }).notice
             end
           end
+          @stop = true
         else
           puts 'Task is not stopped'
           return false

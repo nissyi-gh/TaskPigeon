@@ -9,9 +9,11 @@ module TaskPegion
     BREAK_TIME = 300
 
     attr_reader :config
+    attr_accessor :intterupted
 
     def initialize
       @config = Config.new
+      @interrupted = false
 
       timer_and_notice
     end
@@ -19,21 +21,25 @@ module TaskPegion
     private
 
     def timer_and_notice
-      Signal.trap(:INT) do
-        puts
-        stop = Cli::StopPrompter.new
-        exit unless stop
-      end
+      Signal.trap(:INT) { @interrupted = true }
 
       loop do
-        sleep WORK_TIME
+        sleep 0.5
+
+        if @interrupted
+          if Cli::StopPrompter.new.stop
+            exit
+          else
+            @interrupted = false
+          end
+        end
+
         @config.destinations.each do |destination|
           if destination['notice_types'].include?('pomodoro')
             Notifier.new(destination['url'], { text: 'タスク開始から25分経過しました。一息つきませんか？' }).notice
           end
         end
 
-        sleep BREAK_TIME
         @config.destinations.each do |destination|
           if destination['notice_types'].include?('pomodoro')
             Notifier.new(destination['url'], { text: '5分経過しました。タスクに戻りましょう!' }).notice
