@@ -7,24 +7,29 @@ module TaskPegion
     require 'net/http'
     require 'json'
 
-    attr_reader :notification_url, :data
+    attr_reader :destinations, :notice_type, :data
 
-    def initialize(notification_url, data = { text: 'Hello World' })
-      @notification_url = notification_url
+    def initialize(notice_type, data = { text: 'Hello World' })
+      @destinations = Config.new.destinations
+      @notice_type = notice_type
       @data = data.to_json
     end
 
     def notice
-      uri = URI.parse(notification_url)
-      request = Net::HTTP::Post.new(uri)
-      request.content_type = 'application/json'
-      request.body = data
+      @destinations.each do |destination|
+        if destination['notice_types'].include?(@notice_type)
+          uri = URI.parse(destination['url'])
+          request = Net::HTTP::Post.new(uri)
+          request.content_type = 'application/json'
+          request.body = @data
 
-      # auto close if block given
-      response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |https|
-        https.request(request)
+          # auto close if block given
+          response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |https|
+            https.request(request)
+          end
+          puts "#{response.body} #{response.code}"
+        end
       end
-      puts "#{response.body} #{response.code}"
     end
   end
 end
