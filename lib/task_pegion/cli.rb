@@ -24,6 +24,7 @@ module TaskPegion
       def prompter
         task_type = prompt_task_type
         task_name = prompt_task_name
+        use_pomodoro = prompt_pomodoro
 
         record = Record.new(task_type: task_type, task_name: task_name)
         record.save
@@ -32,6 +33,13 @@ module TaskPegion
           if destination['notice_types'].include?('start')
             Notifier.new(destination['url'], { text: "#{config.user_name}が#{task_type}の#{task_name}を開始しました。" }).notice
           end
+        end
+
+        if use_pomodoro
+          puts 'Pomodoro timer is started. Press Ctrl+C to stop.'
+          Pomodoro.new.run
+        else
+          puts 'Task is started. Execute task_pegion to end task.'
         end
       end
 
@@ -69,13 +77,23 @@ module TaskPegion
           return task_name unless task_name.empty?
         end
       end
+
+      def prompt_pomodoro
+        puts 'Do you want to use pomodoro timer? (y/n)'
+        answer = gets.chomp
+
+        answer == 'y'
+      end
     end
 
     # Interact with user to stop task
     class StopPrompter
+      attr_reader :config, :record
+      attr_accessor :stop
       def initialize
         @config = TaskPegion::Config.new
         @record = Record.last
+        @stop = false
 
         prompter
       end
@@ -109,6 +127,7 @@ module TaskPegion
               Notifier.new(destination['url'], { text: text }).notice
             end
           end
+          @stop = true
         else
           puts 'Task is not stopped'
         end

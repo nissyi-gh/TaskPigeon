@@ -7,6 +7,7 @@ require_relative 'task_pegion/config'
 require_relative 'task_pegion/record'
 require_relative 'task_pegion/notifier'
 require_relative 'task_pegion/cli'
+require_relative 'task_pegion/pomodoro'
 
 module TaskPegion
   class Error < StandardError; end
