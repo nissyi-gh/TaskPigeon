@@ -53,19 +53,17 @@ module TaskPegion
     def send_break_notice
       @next_notice_time += BREAK_TIME
       @next_notice_type = 'work'
-      task_type = 'pomodoro'
       text = 'タスク開始から25分経過しました。一息つきませんか？'
 
-      Notifier.new(task_type, text).notice
+      Notifier.new('pomodoro', text).notice
     end
 
     def send_work_notice
       @next_notice_time += WORK_TIME
       @next_notice_type = 'break'
-      task_type = 'pomodoro'
       text = 'そろそろ休憩終わり！タスクに戻りましょう！'
 
-      Notifier.new(task_type, text).notice
+      Notifier.new('pomodoro', text).notice
     end
 
     def break_time?
