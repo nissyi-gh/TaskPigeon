@@ -27,6 +27,7 @@ module TaskPegion
 
       loop do
         sleep 0.5
+        update_elapsed_time
         hundle_interrupt
         send_break_notice if break_time?
         send_work_notice if work_time?
