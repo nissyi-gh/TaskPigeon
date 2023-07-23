@@ -16,12 +16,12 @@ module TaskPegion
   class << self
     def main
       options = parse_options
-      if options[:start] && options[:end]
-        raise Error, 'Cannot specify both --start and --end'
-      elsif options[:start]
-        task_start(options[:task_type], options[:task_name])
-      elsif options[:end]
-        task_end
+      if options[:daily]
+        puts 'Daily summary. Function is not implemented yet.'
+      elsif options[:weekly]
+        puts 'Weekly summary. Function is not implemented yet.'
+      elsif options[:monthly]
+        puts 'Monthly summary. Function is not implemented yet.'
       else
         Cli.new
       end
@@ -29,57 +29,14 @@ module TaskPegion
 
     def parse_options
       options = {}
-      opt = OptionParser.new do |opt|
-        opt.on_head('-s', '--start', 'Start task') { options[:start] = true }
-        opt.on_head('-e', '--end', 'End task') { options[:end] = true }
-        opt.on('-t [TYPE]', '--task-type [TYPE]', 'Task type') { |v| options[:task_type] = v }
-        opt.on('-n [NAME]', '--task-name [NAME]', 'Task name') { |v| options[:task_name] = v }
+      opts = OptionParser.new do |opt|
+        opt.on_head('-ds', 'Daily summary') { options[:daily] = true }
+        opt.on_head('-ws', 'Weekly summary') { options[:weekly] = true }
+        opt.on_head('-ms', 'Monthly summary') { options[:monthly] = true }
       end
 
-      opt.parse!(ARGV, into: options)
+      opts.parse!(ARGV, into: options)
       options
-    end
-
-    def task_start(task_type, task_name)
-      if Record.last&.ended_at.nil?
-        raise Error, 'Task is already started'
-      elsif task_type.nil? || task_name.nil?
-        raise Error, 'Specify task type and task name'
-      end
-
-      record = Record.new(task_type: task_type, task_name: task_name)
-      record.save
-
-      text = "#{Config.new.user_name}が#{task_type}の#{task_name}を開始しました。"
-      Notifier.new('start', text).notice
-    end
-
-    def task_end
-      record = Record.last
-
-      if record.ended_at
-        raise Error, 'Task is already ended'
-      else
-        record.ended_at = Time.now.to_s
-
-        csv_data = CSV.read('records.csv')
-        csv_data[-1][4] = record.ended_at
-
-        CSV.open('records.csv', 'w') do |csv|
-          csv_data.each do |row|
-            csv << row
-          end
-        end
-
-        text = <<~TEXT
-          #{Config.new.user_name}が#{record.task_type}の#{record.task_name}を終了しました。
-          経過時間は#{record.elapsed_time_formatted}です。
-
-          サマリ
-          #{Record.summary.drop(1).join("\n")}
-        TEXT
-        Notifier.new('end', text).notice
-      end
     end
   end
 end
