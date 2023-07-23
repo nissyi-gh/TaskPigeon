@@ -53,7 +53,7 @@ module TaskPegion
     def send_break_notice
       @next_notice_time += BREAK_TIME
       @next_notice_type = 'work'
-      text = 'タスク開始から25分経過しました。一息つきませんか？'
+      text = "#{@config.user_name} タスク開始から25分経過しました。一息つきませんか？"
 
       Notifier.new('pomodoro', text).notice
     end
@@ -61,7 +61,7 @@ module TaskPegion
     def send_work_notice
       @next_notice_time += WORK_TIME
       @next_notice_type = 'break'
-      text = 'そろそろ休憩終わり！タスクに戻りましょう！'
+      text = "#{@config.user_name} そろそろ休憩終わり！タスクに戻りましょう！"
 
       Notifier.new('pomodoro', text).notice
     end
