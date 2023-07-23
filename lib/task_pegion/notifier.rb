@@ -9,10 +9,10 @@ module TaskPegion
 
     attr_reader :destinations, :notice_type, :data
 
-    def initialize(notice_type, data = { text: 'Hello World' })
+    def initialize(notice_type, text = 'Hello, I am TaskPegion!')
       @destinations = Config.new.destinations
       @notice_type = notice_type
-      @data = data.to_json
+      @data = { text: text }.to_json
     end
 
     def notice
