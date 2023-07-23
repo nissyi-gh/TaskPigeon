@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 RSpec.describe TaskPegion::Pomodoro do
-  describe '#initialize' do
-    let(:started_at) { Time.now }
-    let(:pomodoro) do
-      started_at
-      TaskPegion::Pomodoro.new
-    end
+  let(:started_at) { Time.now }
+  let(:pomodoro) do
+    started_at
+    TaskPegion::Pomodoro.new
+  end
 
+  describe '#initialize' do
     it 'initialize Config' do
       expect(TaskPegion::Config).to receive(:new)
       pomodoro
@@ -21,4 +21,6 @@ RSpec.describe TaskPegion::Pomodoro do
       expect(pomodoro.next_notice_type).to eq('break')
     end
   end
+
+  # TODO: write test for #run, #update_elapsed_time, #hundle_interrupt, #send_break_notice, #send_work_notice
 end
