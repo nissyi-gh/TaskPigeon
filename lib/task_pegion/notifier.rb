@@ -12,7 +12,7 @@ module TaskPegion
     def initialize(notice_type, text = 'Hello, I am TaskPegion!')
       @destinations = Config.new.destinations
       @notice_type = notice_type
-      @data = { text: text }.to_json
+      @data = { text: text }
     end
 
     def notice
@@ -21,13 +21,13 @@ module TaskPegion
           uri = URI.parse(destination['url'])
           request = Net::HTTP::Post.new(uri)
           request.content_type = 'application/json'
-          request.body = @data
+          request.body = @data.to_json
 
           # auto close if block given
           response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |https|
             https.request(request)
           end
-          puts "#{response.body} #{response.code}"
+          puts "#{response.body} #{response.code} '#{@data[:text]}'"
         end
       end
     end
