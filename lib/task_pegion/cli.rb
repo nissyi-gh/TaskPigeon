@@ -29,11 +29,8 @@ module TaskPegion
         record = Record.new(task_type: task_type, task_name: task_name)
         record.save
 
-        @config.destinations.each do |destination|
-          if destination['notice_types'].include?('start')
-            Notifier.new(destination['url'], { text: "#{config.user_name}が#{task_type}の#{task_name}を開始しました。" }).notice
-          end
-        end
+        text = "#{config.user_name}が#{task_type}の#{task_name}を開始しました。"
+        Notifier.new('start', text).notice
 
         if use_pomodoro
           puts 'Pomodoro timer is started. Press Ctrl+C to stop.'
@@ -115,18 +112,15 @@ module TaskPegion
             end
           end
 
-          @config.destinations.each do |destination|
-            if destination['notice_types'].include?('end')
-              text = <<~TEXT
-                #{@config.user_name}が#{@record.task_type}の#{@record.task_name}を終了しました。
-                経過時間は#{@record.elapsed_time_formatted}です。
+          text = <<~TEXT
+            #{@config.user_name}が#{@record.task_type}の#{@record.task_name}を終了しました。
+            経過時間は#{@record.elapsed_time_formatted}です。
 
-                サマリ
-                #{Record.summary.drop(1).join("\n")}
-              TEXT
-              Notifier.new(destination['url'], { text: text }).notice
-            end
-          end
+            サマリ
+            #{Record.summary.drop(1).join("\n")}
+          TEXT
+          Notifier.new('end', text).notice
+
           @stop = true
         else
           puts 'Task is not stopped'

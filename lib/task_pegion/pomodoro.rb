@@ -53,23 +53,17 @@ module TaskPegion
     def send_break_notice
       @next_notice_time += BREAK_TIME
       @next_notice_type = 'work'
+      text = 'タスク開始から25分経過しました。一息つきませんか？'
 
-      @config.destinations.each do |destination|
-        if destination['notice_types'].include?('pomodoro')
-          Notifier.new(destination['url'], { text: 'タスク開始から25分経過しました。一息つきませんか？' }).notice
-        end
-      end
+      Notifier.new('pomodoro', text).notice
     end
 
     def send_work_notice
       @next_notice_time += WORK_TIME
       @next_notice_type = 'break'
+      text = 'そろそろ休憩終わり！タスクに戻りましょう！'
 
-      @config.destinations.each do |destination|
-        if destination['notice_types'].include?('pomodoro')
-          Notifier.new(destination['url'], { text: 'そろそろ休憩終わり！タスクに戻りましょう！' }).notice
-        end
-      end
+      Notifier.new('pomodoro', text).notice
     end
 
     def break_time?
